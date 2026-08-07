@@ -1,50 +1,74 @@
-md
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║   ███╗   ███╗ ██████╗                                    ║
+║   ████╗ ████║██╔═══██╗                                   ║
+║   ██╔████╔██║██║   ██║                                   ║
+║   ██║╚██╔╝██║██║   ██║                                   ║
+║   ██║ ╚═╝ ██║╚██████╔╝                                   ║
+║   ╚═╝     ╚═╝ ╚═════╝                                    ║
+║                                                           ║
+║   turn any URL into clean Markdown                        ║
+║   no ads · no clutter · just content                     ║
+║                                                           ║
+╚═══════════════════════════════════════════════════════════╝
 
-turn any URL into clean Markdown
-no ads · no clutter · just content
+─────────────────────────────────────────────────────────────
 
+OVERVIEW
 
-what it does
+  md extracts the main content from any webpage and converts
+  it into readable Markdown. Paste a URL, get clean .md back.
 
-extracts the main content from any webpage and converts it
-into readable Markdown. Paste a link, get clean .md back.
+  no signup · no trackers · just a bar and a result
 
-no signup · no trackers · just a bar and a result
+─────────────────────────────────────────────────────────────
 
+HOW IT WORKS
 
-how it works
+  URL → defuddle.md API → clean Markdown
 
-URL → defuddle.md API → clean Markdown
+─────────────────────────────────────────────────────────────
 
+FEATURES
 
-features
+  · one input — paste any URL
+  · strips ads, navigation, footers, scripts
+  · download as .md file
+  · copy-ready output
+  · minimal black & white design
 
-· paste any URL
-· removes ads, nav, footers, scripts
-· download as .md
-· copy-ready output
-· dark minimal design
+─────────────────────────────────────────────────────────────
 
+TECH STACK
 
-tech
+  · HTML · CSS · vanilla JavaScript
+  · defuddle.md API
 
-· HTML · CSS · vanilla JS
-· defuddle.md API
+─────────────────────────────────────────────────────────────
 
+USE CASES
 
-use cases
+  · save articles for offline reading
+  · clean input for LLMs
+  · archive web pages
+  · research & note-taking
 
-· save articles for offline reading
-· feed content into LLMs
-· archive web pages as markdown
-· research & note-taking
+─────────────────────────────────────────────────────────────
 
+INSTALLATION
 
-installation
+  git clone https://github.com/yourusername/md.git
+  cd md
+  open index.html
 
-git clone https://github.com/yourusername/md.git
-cd md
-open index.html
+  no build step · no dependencies
 
-no build step · no dependencies
+─────────────────────────────────────────────────────────────
 
+LICENSE
+
+  MIT
+
+─────────────────────────────────────────────────────────────
+
+made with  by yourname
