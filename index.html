@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>web → .md</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -13,8 +12,8 @@
         }
 
         body {
-            background: #000000;
-            color: #ffffff;
+            background: #0a0a0a;
+            color: #e0e0e0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             min-height: 100vh;
             display: flex;
@@ -38,21 +37,20 @@
         .brand {
             font-size: 28px;
             font-weight: 300;
-            color: #ffffff;
+            color: #e0e0e0;
             letter-spacing: -0.5px;
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .brand i {
-            font-size: 28px;
-            color: #888888;
+        .brand .arrow {
+            color: #666666;
         }
 
         .sub {
             font-size: 14px;
-            color: #888888;
+            color: #666666;
             text-align: center;
             margin-top: -10px;
             font-weight: 300;
@@ -68,31 +66,31 @@
 
         .search-row input {
             flex: 1;
-            background: #111111;
-            border: 1px solid #333333;
+            background: #121212;
+            border: 1px solid #2a2a2a;
             border-radius: 6px;
             padding: 16px 22px;
             font-family: inherit;
             font-size: 16px;
-            color: #ffffff;
+            color: #e0e0e0;
             outline: none;
             transition: border 0.2s, box-shadow 0.2s;
             font-weight: 300;
         }
 
         .search-row input:focus {
-            border-color: #ffffff;
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
+            border-color: #888888;
+            box-shadow: 0 0 0 3px rgba(136, 136, 136, 0.1);
         }
 
         .search-row input::placeholder {
-            color: #555555;
+            color: #444444;
             font-style: italic;
         }
 
         .search-row button {
-            background: #ffffff;
-            color: #000000;
+            background: #e0e0e0;
+            color: #0a0a0a;
             border: none;
             border-radius: 6px;
             padding: 16px 32px;
@@ -108,7 +106,7 @@
         }
 
         .search-row button:hover {
-            background: #e0e0e0;
+            background: #cccccc;
             transform: scale(1.01);
         }
 
@@ -120,7 +118,7 @@
             display: none;
             width: 100%;
             margin-top: 20px;
-            border-top: 1px solid #333333;
+            border-top: 1px solid #2a2a2a;
             padding-top: 24px;
         }
 
@@ -135,8 +133,8 @@
         }
 
         .preview {
-            background: #0a0a0a;
-            border: 1px solid #333333;
+            background: #0e0e0e;
+            border: 1px solid #2a2a2a;
             border-radius: 6px;
             padding: 18px 22px;
             min-height: 200px;
@@ -146,12 +144,12 @@
             line-height: 1.7;
             white-space: pre-wrap;
             word-break: break-word;
-            color: #dddddd;
+            color: #cccccc;
             font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
         }
 
         .preview .empty-state {
-            color: #555555;
+            color: #444444;
             font-style: italic;
             display: flex;
             align-items: center;
@@ -164,10 +162,10 @@
             width: 4px;
         }
         .preview::-webkit-scrollbar-track {
-            background: #0a0a0a;
+            background: #0e0e0e;
         }
         .preview::-webkit-scrollbar-thumb {
-            background: #444444;
+            background: #333333;
             border-radius: 10px;
         }
 
@@ -180,8 +178,8 @@
 
         .actions button {
             background: transparent;
-            border: 1px solid #333333;
-            color: #ffffff;
+            border: 1px solid #2a2a2a;
+            color: #cccccc;
             padding: 8px 20px;
             border-radius: 4px;
             font-family: inherit;
@@ -196,28 +194,29 @@
 
         .actions button:hover {
             background: #1a1a1a;
-            border-color: #666666;
+            border-color: #555555;
+            color: #e0e0e0;
         }
 
         .actions button.primary {
-            background: #ffffff;
-            color: #000000;
-            border-color: #ffffff;
+            background: #e0e0e0;
+            color: #0a0a0a;
+            border-color: #e0e0e0;
         }
 
         .actions button.primary:hover {
-            background: #e0e0e0;
-            border-color: #e0e0e0;
+            background: #cccccc;
+            border-color: #cccccc;
         }
 
         .status {
             margin-top: 16px;
             font-size: 11px;
-            color: #555555;
+            color: #444444;
             display: flex;
             justify-content: flex-end;
             padding-top: 10px;
-            border-top: 1px solid #222222;
+            border-top: 1px solid #1a1a1a;
             font-weight: 300;
         }
 
@@ -225,11 +224,10 @@
             margin-right: 4px;
         }
 
-        /* markdown styling inside preview */
         .preview h1,
         .preview h2,
         .preview h3 {
-            color: #ffffff;
+            color: #e0e0e0;
             margin-top: 12px;
             margin-bottom: 6px;
         }
@@ -238,27 +236,27 @@
         }
         .preview h2 {
             font-size: 1.2em;
-            color: #dddddd;
+            color: #cccccc;
         }
         .preview h3 {
             font-size: 1.05em;
-            color: #cccccc;
+            color: #bbbbbb;
         }
         .preview strong {
-            color: #ffffff;
+            color: #e0e0e0;
         }
         .preview em {
-            color: #aaaaaa;
+            color: #999999;
         }
         .preview a {
-            color: #88bbdd;
+            color: #88aacc;
             text-decoration: underline;
         }
         .preview code {
             background: #1a1a1a;
             padding: 0.1rem 0.5rem;
             border-radius: 4px;
-            color: #ccddcc;
+            color: #bbccbb;
             font-family: inherit;
         }
         .preview ul,
@@ -270,14 +268,14 @@
             margin: 2px 0;
         }
         .preview blockquote {
-            border-left: 2px solid #444444;
+            border-left: 2px solid #333333;
             padding-left: 14px;
-            color: #aaaaaa;
+            color: #999999;
             margin: 8px 0;
         }
         .preview hr {
             border: none;
-            border-top: 1px solid #333333;
+            border-top: 1px solid #2a2a2a;
             margin: 12px 0;
         }
 
@@ -299,7 +297,7 @@
 
     <div class="main">
         <div class="brand">
-            <i class="fas fa-arrow-right"></i> .md
+            <span class="arrow">→</span> .md
         </div>
         <div class="sub">
             get the main content of any page as Markdown
@@ -307,18 +305,18 @@
 
         <div class="search-row">
             <input type="text" id="urlInput" placeholder="paste any URL …" autofocus>
-            <button id="fetchBtn"><i class="fas fa-arrow-right"></i> convert</button>
+            <button id="fetchBtn">→ convert</button>
         </div>
 
         <div class="output" id="outputArea">
             <div class="preview" id="previewBox">
                 <div class="empty-state">
-                    <i class="fas fa-spinner fa-pulse"></i> fetching …
+                    <span>◌</span> fetching …
                 </div>
             </div>
             <div class="actions">
-                <button class="primary" id="downloadBtn"><i class="fas fa-download"></i> download .md</button>
-                <button id="clearBtn"><i class="fas fa-times"></i> clear</button>
+                <button class="primary" id="downloadBtn">↓ download .md</button>
+                <button id="clearBtn">✕ clear</button>
             </div>
             <div class="status">
                 <span><span id="charCount">0</span> chars</span>
@@ -343,7 +341,7 @@
         function renderMarkdown(md) {
             currentMarkdown = md;
             if (!md || md.trim() === '') {
-                previewBox.innerHTML = `<div class="empty-state"><i class="fas fa-terminal"></i>  markdown will appear here</div>`;
+                previewBox.innerHTML = `<div class="empty-state"><span>◌</span> markdown will appear here</div>`;
                 charCount.textContent = '0';
                 return;
             }
@@ -407,7 +405,7 @@
             }
 
             outputArea.classList.add('visible');
-            previewBox.innerHTML = `<div class="empty-state"><i class="fas fa-spinner fa-pulse"></i>  fetching ${cleanUrl} …</div>`;
+            previewBox.innerHTML = `<div class="empty-state"><span>◌</span> fetching ${cleanUrl} …</div>`;
 
             try {
                 const markdown = await fetchWithDefuddle(cleanUrl);
@@ -420,7 +418,7 @@
                 outputArea.classList.add('visible');
 
             } catch (err) {
-                previewBox.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i>  ${err.message || 'Failed to fetch'}</div>`;
+                previewBox.innerHTML = `<div class="empty-state"><span>◌</span> ${err.message || 'Failed to fetch'}</div>`;
                 outputArea.classList.add('visible');
             }
         }
