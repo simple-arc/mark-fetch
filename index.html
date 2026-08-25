@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>web → .md</title>
+  <title>MarkFetch · extract & convert</title>
   <style>
     * {
       margin: 0;
@@ -11,319 +11,603 @@
       box-sizing: border-box;
     }
 
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #0a0a0a;
+      --bg-card: #0d0d0d;
+      --bg-input: #080808;
+      --border-color: #1a1a1a;
+      --border-hover: #2a2a2a;
+      --text-primary: #f0f0f0;
+      --text-secondary: #888888;
+      --text-muted: #444444;
+      --accent: #6c8cbf;
+      --accent-hover: #7fa1d4;
+      --shadow: 0 12px 40px rgba(0,0,0,0.9);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --transition: 0.25s ease;
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f5f6f8;
+      --bg-secondary: #ecedef;
+      --bg-card: #ffffff;
+      --bg-input: #f0f1f3;
+      --border-color: #d0d4da;
+      --border-hover: #b0b6be;
+      --text-primary: #1a1d21;
+      --text-secondary: #5a626e;
+      --text-muted: #8a929e;
+      --accent: #5a7db0;
+      --accent-hover: #4a6d9e;
+      --shadow: 0 12px 40px rgba(0,0,0,0.08);
+    }
+
     body {
-      background: #0a0a0a;
-      color: #e0e0e0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      padding: 60px 20px;
+      padding: 40px 20px 80px;
+      transition: background var(--transition), color var(--transition);
     }
 
     .container {
       width: 100%;
-      max-width: 700px;
+      max-width: 820px;
     }
 
-    .main {
+    .header {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 0;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      padding: 0 4px;
     }
 
-    /* ── brand / header ── */
     .brand {
-      font-size: 42px;
-      font-weight: 600;
-      color: #ffffff;
-      letter-spacing: -1px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      font-size: 28px;
+      font-weight: 650;
+      color: var(--text-primary);
+      letter-spacing: -0.8px;
+      transition: color var(--transition);
+    }
+
+    .brand-badge {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 2px 10px;
+      border-radius: 40px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      transition: all var(--transition);
+    }
+
+    .header-controls {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 8px;
     }
 
-    .brand .arrow {
-      color: #444444;
-      font-weight: 300;
+    .theme-toggle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition);
+      padding: 0;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--border-hover);
+      background: var(--bg-secondary);
+    }
+
+    .theme-toggle svg {
+      width: 19px;
+      height: 19px;
+      fill: none;
+      stroke: var(--text-secondary);
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: stroke var(--transition);
+    }
+
+    .theme-toggle:hover svg {
+      stroke: var(--text-primary);
+    }
+
+    .mode-toggle {
+      display: flex;
+      gap: 2px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 40px;
+      padding: 3px;
+      transition: all var(--transition);
+    }
+
+    .mode-btn {
+      background: transparent;
+      border: none;
+      padding: 5px 14px;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all var(--transition);
+      font-family: inherit;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+    }
+
+    .mode-btn.active {
+      background: var(--border-color);
+      color: var(--text-primary);
+    }
+
+    .mode-btn:hover:not(.active) {
+      color: var(--text-primary);
     }
 
     .sub {
-      font-size: 20px;
-      color: #666666;
-      text-align: center;
-      margin-bottom: 40px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
       font-weight: 400;
-      letter-spacing: 0.2px;
+      padding: 0 4px;
+      letter-spacing: 0.1px;
+      transition: color var(--transition);
     }
 
-    /* ── search row ── */
     .search-row {
       display: flex;
       gap: 0;
       width: 100%;
-      max-width: 700px;
-      border: 1px solid #2a2a2a;
-      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
       overflow: hidden;
-      background: #121212;
+      background: var(--bg-card);
+      transition: border-color var(--transition), box-shadow var(--transition);
+      box-shadow: var(--shadow);
+    }
+
+    .search-row:focus-within {
+      border-color: var(--border-hover);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.9), 0 0 0 1px rgba(108,140,191,0.05);
     }
 
     .search-row input {
       flex: 1;
-      background: transparent;
+      background: var(--bg-input);
       border: none;
-      padding: 18px 22px;
+      padding: 16px 22px;
       font-family: inherit;
-      font-size: 16px;
-      color: #e0e0e0;
+      font-size: 15px;
+      color: var(--text-primary);
       outline: none;
       font-weight: 400;
       min-width: 0;
+      transition: background var(--transition), color var(--transition);
     }
 
     .search-row input::placeholder {
-      color: #444444;
+      color: var(--text-muted);
+      font-weight: 350;
     }
 
     .search-row button {
-      background: transparent;
-      color: #e0e0e0;
+      background: var(--bg-input);
+      color: var(--text-secondary);
       border: none;
-      border-left: 1px solid #2a2a2a;
-      padding: 18px 28px;
+      border-left: 1px solid var(--border-color);
+      padding: 16px 28px;
       font-family: inherit;
-      font-size: 16px;
-      font-weight: 400;
+      font-size: 14px;
+      font-weight: 500;
       cursor: pointer;
-      transition: background 0.15s;
+      transition: all var(--transition);
       white-space: nowrap;
       display: flex;
       align-items: center;
       gap: 8px;
-      color: #888888;
+      letter-spacing: 0.2px;
     }
 
     .search-row button:hover {
-      background: #1a1a1a;
-      color: #e0e0e0;
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border-left-color: var(--border-hover);
     }
 
-    /* ── output panel ── */
+    .search-row button svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
     .output {
       display: none;
       width: 100%;
-      margin-top: 40px;
+      margin-top: 36px;
     }
 
     .output.visible {
       display: block;
-      animation: fade 0.25s ease;
+      animation: slideFade 0.35s ease;
     }
 
-    @keyframes fade {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
+    @keyframes slideFade {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .preview-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: all var(--transition);
+    }
+
+    .preview-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 18px;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      transition: all var(--transition);
+    }
+
+    .preview-toolbar .left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .preview-toolbar .left .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border-color);
+      display: inline-block;
+      transition: background var(--transition);
+    }
+
+    .preview-toolbar .left .dot.active {
+      background: #3fb37f;
+    }
+
+    .preview-toolbar .right {
+      display: flex;
+      gap: 4px;
+    }
+
+    .preview-toolbar .right button {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .preview-toolbar .right button:hover {
+      background: var(--border-color);
+      color: var(--text-primary);
+    }
+
+    .preview-toolbar .right button svg {
+      width: 14px;
+      height: 14px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
     .preview {
-      background: #0e0e0e;
-      border: 1px solid #2a2a2a;
-      border-radius: 8px;
-      padding: 24px 28px;
-      min-height: 200px;
-      max-height: 500px;
+      background: var(--bg-primary);
+      padding: 28px 32px;
+      min-height: 240px;
+      max-height: 540px;
       overflow-y: auto;
       font-size: 14px;
       line-height: 1.8;
       white-space: pre-wrap;
       word-break: break-word;
-      color: #cccccc;
+      color: var(--text-primary);
       font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+      transition: background var(--transition), color var(--transition);
     }
 
     .preview .empty-state {
-      color: #444444;
+      color: var(--text-muted);
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 150px;
-      gap: 10px;
-      font-style: normal;
+      height: 160px;
+      gap: 8px;
+      font-size: 13px;
     }
 
-    .preview::-webkit-scrollbar {
-      width: 4px;
-    }
-    .preview::-webkit-scrollbar-track {
-      background: #0e0e0e;
-    }
-    .preview::-webkit-scrollbar-thumb {
-      background: #333333;
-      border-radius: 10px;
+    .preview .empty-state svg {
+      width: 40px;
+      height: 40px;
+      stroke: var(--text-muted);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0.4;
     }
 
-    /* ── actions & status ── */
+    .preview .empty-state .hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      opacity: 0.5;
+    }
+
+    .preview::-webkit-scrollbar { width: 4px; }
+    .preview::-webkit-scrollbar-track { background: var(--bg-primary); }
+    .preview::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 20px; }
+
     .actions {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       margin-top: 16px;
       justify-content: flex-end;
+      flex-wrap: wrap;
     }
 
     .actions button {
-      background: transparent;
-      border: 1px solid #2a2a2a;
-      color: #888888;
-      padding: 8px 18px;
-      border-radius: 6px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      padding: 9px 20px;
+      border-radius: var(--radius-sm);
       font-family: inherit;
-      font-size: 13px;
+      font-size: 12px;
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all var(--transition);
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-weight: 400;
+      gap: 8px;
+      font-weight: 450;
     }
 
     .actions button:hover {
-      background: #1a1a1a;
-      border-color: #444444;
-      color: #e0e0e0;
+      background: var(--border-color);
+      border-color: var(--border-hover);
+      color: var(--text-primary);
     }
 
     .actions button.primary {
-      background: #e0e0e0;
-      color: #0a0a0a;
-      border-color: #e0e0e0;
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
     }
 
     .actions button.primary:hover {
-      background: #cccccc;
-      border-color: #cccccc;
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
     }
 
-    .status {
-      margin-top: 14px;
-      font-size: 12px;
-      color: #444444;
-      display: flex;
-      justify-content: flex-end;
-      font-weight: 400;
+    .actions button svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
-    /* ── markdown preview styles ── */
-    .preview h1,
-    .preview h2,
-    .preview h3 {
-      color: #e0e0e0;
+    .status-bar {
       margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      padding: 0 4px;
+      flex-wrap: wrap;
+      gap: 6px;
+      transition: color var(--transition);
+    }
+
+    .status-bar .stats {
+      display: flex;
+      gap: 14px;
+    }
+
+    .status-bar .stats span {
+      background: var(--bg-card);
+      padding: 2px 12px;
+      border-radius: 40px;
+      border: 1px solid var(--border-color);
+      transition: all var(--transition);
+    }
+
+    .status-bar .url-info {
+      color: var(--text-muted);
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      opacity: 0.6;
+    }
+
+    .preview h1, .preview h2, .preview h3 {
+      color: var(--text-primary);
+      margin-top: 14px;
       margin-bottom: 6px;
       font-weight: 600;
+      transition: color var(--transition);
     }
-    .preview h1 {
-      font-size: 1.5em;
-    }
-    .preview h2 {
-      font-size: 1.25em;
-      color: #cccccc;
-    }
-    .preview h3 {
-      font-size: 1.1em;
-      color: #bbbbbb;
-    }
-    .preview strong {
-      color: #e0e0e0;
-      font-weight: 600;
-    }
-    .preview em {
-      color: #999999;
-    }
-    .preview a {
-      color: #88aacc;
-      text-decoration: underline;
-    }
+    .preview h1 { font-size: 1.7em; letter-spacing: -0.3px; }
+    .preview h2 { font-size: 1.35em; color: var(--text-secondary); }
+    .preview h3 { font-size: 1.15em; color: var(--text-secondary); }
+    .preview strong { color: var(--text-primary); font-weight: 600; }
+    .preview em { color: var(--text-secondary); }
+    .preview a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .preview a:hover { color: var(--accent-hover); }
     .preview code {
-      background: #1a1a1a;
+      background: var(--bg-card);
       padding: 0.1rem 0.5rem;
       border-radius: 4px;
-      color: #bbccbb;
+      color: #b8d0b0;
       font-family: inherit;
+      font-size: 0.9em;
+      border: 1px solid var(--border-color);
+      transition: all var(--transition);
     }
-    .preview ul,
-    .preview ol {
-      padding-left: 24px;
-      margin: 6px 0;
-    }
-    .preview li {
-      margin: 2px 0;
-    }
+    .preview ul, .preview ol { padding-left: 26px; margin: 6px 0; }
+    .preview li { margin: 3px 0; }
     .preview blockquote {
-      border-left: 2px solid #333333;
-      padding-left: 14px;
-      color: #999999;
-      margin: 8px 0;
+      border-left: 3px solid var(--accent);
+      padding-left: 18px;
+      color: var(--text-secondary);
+      margin: 12px 0;
+      background: var(--bg-card);
+      padding: 8px 18px;
+      border-radius: 4px;
+      transition: all var(--transition);
     }
     .preview hr {
       border: none;
-      border-top: 1px solid #2a2a2a;
-      margin: 12px 0;
+      border-top: 1px solid var(--border-color);
+      margin: 16px 0;
+      transition: border-color var(--transition);
     }
+    .preview p { margin: 6px 0; }
 
-    @media (max-width: 600px) {
-      body {
-        padding: 30px 16px;
-      }
-      .brand {
-        font-size: 30px;
-      }
-      .sub {
-        font-size: 16px;
-        margin-bottom: 30px;
-      }
-      .search-row {
-        flex-direction: row;
-      }
-      .search-row button {
-        padding: 18px 18px;
-        font-size: 14px;
-      }
+    @media (max-width: 640px) {
+      body { padding: 20px 12px 60px; }
+      .header { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .brand-logo { font-size: 24px; }
+      .search-row input { padding: 14px 16px; font-size: 14px; }
+      .search-row button { padding: 14px 18px; font-size: 13px; }
+      .preview { padding: 18px 16px; font-size: 13px; max-height: 380px; }
+      .preview-toolbar { padding: 8px 12px; flex-wrap: wrap; gap: 6px; }
+      .actions button { padding: 8px 14px; font-size: 11px; }
+      .status-bar { flex-direction: column; align-items: flex-start; gap: 4px; }
+      .mode-btn { font-size: 10px; padding: 4px 10px; }
     }
   </style>
 </head>
 <body>
 <div class="container">
 
-  <div class="main">
+  <div class="header">
     <div class="brand">
-      <span class="arrow">→</span> .md
+      <span class="brand-logo">MarkFetch</span>
+      <span class="brand-badge">beta</span>
     </div>
-    <div class="sub">
-      Get the main content of any page as Markdown
+    <div class="header-controls">
+      <div class="mode-toggle" id="modeToggle">
+        <button class="mode-btn active" data-mode="standard">Std</button>
+        <button class="mode-btn" data-mode="clean">Clean</button>
+        <button class="mode-btn" data-mode="raw">Raw</button>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 3a6 6 0 0 0 9 9 6 6 0 1 1-9-9Z" />
+        </svg>
+      </button>
     </div>
+  </div>
 
-    <div class="search-row">
-      <input type="text" id="urlInput" placeholder="paste any URL …" autofocus>
-      <button id="fetchBtn">→ convert</button>
-    </div>
+  <div class="sub">extract, convert, and export any webpage as clean Markdown</div>
 
-    <div class="output" id="outputArea">
-      <div class="preview" id="previewBox">
-        <div class="empty-state">
-          <span>◌</span> fetching …
+  <div class="search-row">
+    <input type="text" id="urlInput" placeholder="https://example.com/article" autofocus spellcheck="false">
+    <button id="fetchBtn">
+      <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      Convert
+    </button>
+  </div>
+
+  <div class="output" id="outputArea">
+    <div class="preview-wrapper">
+      <div class="preview-toolbar">
+        <div class="left">
+          <span class="dot" id="statusDot"></span>
+          <span id="statusLabel">Ready</span>
+        </div>
+        <div class="right">
+          <button id="copyBtn">
+            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+          <button id="wordWrapBtn">
+            <svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M3 12h12"/><path d="M3 18h6"/><path d="M18 9l3 3-3 3"/></svg>
+            Wrap
+          </button>
         </div>
       </div>
-      <div class="actions">
-        <button class="primary" id="downloadBtn">↓ download .md</button>
-        <button id="clearBtn">✕ clear</button>
+      <div class="preview" id="previewBox">
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8"/><path d="M8 12h6"/><path d="M8 16h4"/></svg>
+          <span>markdown preview</span>
+          <span class="hint">paste a URL and convert</span>
+        </div>
       </div>
-      <div class="status">
-        <span><span id="charCount">0</span> chars</span>
+    </div>
+
+    <div class="actions">
+      <button class="primary" id="downloadBtn">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download .md
+      </button>
+      <button id="clearBtn">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Clear
+      </button>
+    </div>
+
+    <div class="status-bar">
+      <div class="stats">
+        <span id="charCount">0 chars</span>
+        <span id="wordCount">0 words</span>
       </div>
+      <div class="url-info" id="urlInfo">—</div>
     </div>
   </div>
 
@@ -337,25 +621,86 @@
     const outputArea = document.getElementById('outputArea');
     const downloadBtn = document.getElementById('downloadBtn');
     const clearBtn = document.getElementById('clearBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const wordWrapBtn = document.getElementById('wordWrapBtn');
     const charCount = document.getElementById('charCount');
+    const wordCount = document.getElementById('wordCount');
+    const urlInfo = document.getElementById('urlInfo');
+    const statusDot = document.getElementById('statusDot');
+    const statusLabel = document.getElementById('statusLabel');
+    const themeToggle = document.getElementById('themeToggle');
 
     let currentMarkdown = '';
+    let lastFetchedUrl = '';
+    let currentMode = 'standard';
+    let wordWrap = false;
+    let darkTheme = true;
+
+    themeToggle.addEventListener('click', function() {
+      darkTheme = !darkTheme;
+      document.documentElement.setAttribute('data-theme', darkTheme ? 'dark' : 'light');
+      const svg = this.querySelector('svg');
+      if (darkTheme) {
+        svg.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 6 6 0 1 1-9-9Z"/>';
+      } else {
+        svg.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+      }
+    });
+
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentMode = this.dataset.mode;
+        if (currentMarkdown) renderMarkdown(currentMarkdown);
+        updateStatus('Mode: ' + currentMode);
+      });
+    });
+
+    function updateStatus(text, isGood = true) {
+      statusLabel.textContent = text;
+      statusDot.className = 'dot' + (isGood ? ' active' : '');
+    }
 
     function renderMarkdown(md) {
       currentMarkdown = md;
-      if (!md || md.trim() === '') {
-        previewBox.innerHTML = `<div class="empty-state"><span>◌</span> markdown will appear here</div>`;
-        charCount.textContent = '0';
+      const trimmed = md.trim();
+      if (!trimmed) {
+        previewBox.innerHTML = `
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8"/><path d="M8 12h6"/><path d="M8 16h4"/></svg>
+            <span>markdown preview</span>
+            <span class="hint">paste a URL and convert</span>
+          </div>
+        `;
+        charCount.textContent = '0 chars';
+        wordCount.textContent = '0 words';
         return;
       }
 
-      let html = md
+      let processed = md;
+      if (currentMode === 'clean') {
+        processed = processed.replace(/\*\*(.*?)\*\*/g, '$1');
+        processed = processed.replace(/\*(.*?)\*/g, '$1');
+        processed = processed.replace(/\[(.*?)\]\(.*?\)/g, '$1');
+        processed = processed.replace(/^[\-\*]\s+/gim, '• ');
+        processed = processed.replace(/^>\s+/gim, '');
+      } else if (currentMode === 'raw') {
+        let html = md.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        previewBox.innerHTML = `<pre style="white-space:pre-wrap;font-family:inherit;margin:0;color:var(--text-primary);">${html}</pre>`;
+        const words = md.split(/\s+/).filter(w => w.length > 0).length;
+        charCount.textContent = md.length + ' chars';
+        wordCount.textContent = words + ' words';
+        return;
+      }
+
+      let html = processed
         .replace(/^# (.*$)/gim, '<h1>$1</h1>')
         .replace(/^## (.*$)/gim, '<h2>$1</h2>')
         .replace(/^### (.*$)/gim, '<h3>$1</h3>')
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.*?)\*/g, '<em>$1</em>')
-        .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>')
+        .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
         .replace(/`(.*?)`/g, '<code>$1</code>')
         .replace(/^[\-\*]\s+(.*)$/gim, '<li>$1</li>')
         .replace(/^\d+\.\s+(.*)$/gim, '<li>$1</li>')
@@ -369,60 +714,65 @@
         }).join('');
 
       html = html.replace(/(<li>.*?<\/li>)\s*(?=<li>)/g, '$1');
-      html = html.replace(/(<li>.*?<\/li>)+/g, (match) => {
-        return `<ul>${match}</ul>`;
-      });
+      html = html.replace(/(<li>.*?<\/li>)+/g, (match) => `<ul>${match}</ul>`);
 
       previewBox.innerHTML = html;
-      charCount.textContent = md.length;
+      const words = md.split(/\s+/).filter(w => w.length > 0).length;
+      charCount.textContent = md.length + ' chars';
+      wordCount.textContent = words + ' words';
     }
 
     async function fetchWithDefuddle(url) {
       const apiUrl = `https://defuddle.md/${url}`;
-
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 20000);
         const response = await fetch(apiUrl, {
-          signal: AbortSignal.timeout(15000),
+          signal: controller.signal,
           headers: { 'Accept': 'text/markdown' }
         });
-
-        if (!response.ok) {
-          throw new Error(`API returned ${response.status}`);
-        }
-
+        clearTimeout(timeoutId);
+        if (!response.ok) throw new Error(`API ${response.status}`);
         return await response.text();
       } catch (error) {
-        console.error('API error:', error);
-        throw new Error(`Fetch failed: ${error.message}`);
+        if (error.name === 'AbortError') throw new Error('Timeout (20s)');
+        throw new Error(error.message);
       }
     }
 
     async function fetchWebpage(url) {
       let cleanUrl = url.trim();
-      if (!cleanUrl) {
-        alert('Enter a URL.');
-        return;
-      }
+      if (!cleanUrl) { alert('Enter a URL.'); return; }
       if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
         cleanUrl = 'https://' + cleanUrl;
       }
 
       outputArea.classList.add('visible');
-      previewBox.innerHTML = `<div class="empty-state"><span>◌</span> fetching ${cleanUrl} …</div>`;
+      previewBox.innerHTML = `
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>
+          <span>fetching…</span>
+          <span class="hint">${cleanUrl.replace(/^https?:\/\//, '')}</span>
+        </div>
+      `;
+      updateStatus('Fetching…', true);
 
       try {
         const markdown = await fetchWithDefuddle(cleanUrl);
-
-        if (!markdown || markdown.trim().length < 10) {
-          throw new Error('No readable content found.');
-        }
-
+        if (!markdown || markdown.trim().length < 6) throw new Error('No readable content.');
         renderMarkdown(markdown);
-        outputArea.classList.add('visible');
-
+        lastFetchedUrl = cleanUrl;
+        urlInfo.textContent = cleanUrl;
+        updateStatus('Done', true);
       } catch (err) {
-        previewBox.innerHTML = `<div class="empty-state"><span>◌</span> ${err.message || 'Failed to fetch'}</div>`;
-        outputArea.classList.add('visible');
+        previewBox.innerHTML = `
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>${err.message}</span>
+            <span class="hint">try another URL</span>
+          </div>
+        `;
+        updateStatus('Error', false);
       }
     }
 
@@ -435,34 +785,54 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `page-${Date.now()}.md`;
+      const name = lastFetchedUrl ? lastFetchedUrl.replace(/^https?:\/\//, '').replace(/\/.*$/, '').replace(/[^a-zA-Z0-9]/g, '_') || 'page' : 'page';
+      a.download = `${name}.md`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     }
 
+    function copyMarkdown() {
+      if (!currentMarkdown || currentMarkdown.trim() === '') {
+        alert('Nothing to copy.');
+        return;
+      }
+      navigator.clipboard.writeText(currentMarkdown).then(() => {
+        const orig = statusLabel.textContent;
+        updateStatus('Copied!', true);
+        setTimeout(() => updateStatus(orig, true), 1500);
+      }).catch(() => alert('Copy failed.'));
+    }
+
     function clearAll() {
       urlInput.value = '';
       outputArea.classList.remove('visible');
       currentMarkdown = '';
+      lastFetchedUrl = '';
+      urlInfo.textContent = '—';
       renderMarkdown('');
+      updateStatus('Ready', true);
       urlInput.focus();
     }
 
+    wordWrapBtn.addEventListener('click', function() {
+      wordWrap = !wordWrap;
+      previewBox.style.whiteSpace = wordWrap ? 'pre-wrap' : 'pre-wrap';
+    });
+
     fetchBtn.addEventListener('click', () => fetchWebpage(urlInput.value));
     urlInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        fetchWebpage(urlInput.value);
-      }
+      if (e.key === 'Enter') { e.preventDefault(); fetchWebpage(urlInput.value); }
     });
     downloadBtn.addEventListener('click', downloadMarkdown);
     clearBtn.addEventListener('click', clearAll);
+    copyBtn.addEventListener('click', copyMarkdown);
 
     renderMarkdown('');
     outputArea.classList.remove('visible');
     urlInput.focus();
+    updateStatus('Ready', true);
   })();
 </script>
 </body>
