@@ -221,4 +221,6 @@
 
   renderMarkdown('');
   outputArea.classList.remove('visible');
-  urlInput
+  urlInput.focus();
+  updateStatus('Ready', true);
+})();
